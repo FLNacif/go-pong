@@ -5,8 +5,11 @@ import (
 	"image/color"
 	"log"
 
+	"github.com/FLNacif/go-pong/consts"
+
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/examples/resources/fonts"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/text"
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/opentype"
@@ -16,6 +19,12 @@ type Entity interface {
 	Draw(screen *ebiten.Image)
 	Move()
 	Debug()
+	Bounds() *Bounds
+}
+
+type Bounds struct {
+	Min [2]float64
+	Max [2]float64
 }
 
 type State struct {
@@ -27,6 +36,7 @@ type State struct {
 }
 
 func (s *State) Update() {
+	s.isKeyJustPressed()
 	for _, entitie := range s.Entities {
 		entitie.Move()
 	}
@@ -69,12 +79,15 @@ func (s *State) AddScore(playerNumber int) {
 }
 
 func (s *State) CheckGoal() {
-	if s.Ball.X < s.Player1.X {
+	ballBounds := s.Ball.Bounds()
+	player1Bounds := s.Player1.Bounds()
+	player2Bounds := s.Player2.Bounds()
+	if ballBounds.Max[0] < player1Bounds.Min[0] {
 		s.AddScore(2)
 		s.Ball.Reset()
 
 	}
-	if s.Ball.X > s.Player2.X {
+	if ballBounds.Min[0] > player2Bounds.Max[0] {
 		s.AddScore(1)
 		s.Ball.Reset()
 
@@ -82,7 +95,34 @@ func (s *State) CheckGoal() {
 }
 
 func (s *State) CheckHit() {
+	ballBounds := s.Ball.Bounds()
+	player1Bounds := s.Player1.Bounds()
+	player2Bounds := s.Player2.Bounds()
 
+	if ballBounds.Overlaps(player1Bounds) {
+		s.Ball.Hit()
+	}
+	if ballBounds.Overlaps(player2Bounds) {
+		s.Ball.Hit()
+	}
+}
+
+func (s *State) isKeyJustPressed() bool {
+	if inpututil.IsKeyJustPressed(ebiten.KeyArrowUp) {
+		s.Player2.ChangeDirection(consts.Up)
+	}
+	if inpututil.IsKeyJustPressed(ebiten.KeyArrowDown) {
+		s.Player2.ChangeDirection(consts.Down)
+	}
+
+	if inpututil.IsKeyJustPressed(ebiten.KeyW) {
+		s.Player1.ChangeDirection(consts.Up)
+	}
+
+	if inpututil.IsKeyJustPressed(ebiten.KeyS) {
+		s.Player1.ChangeDirection(consts.Down)
+	}
+	return true
 }
 
 func (s *State) InitializeState() {
@@ -105,4 +145,9 @@ func (s *State) PrintState() {
 		entitie.Debug()
 	}
 	fmt.Println("################")
+}
+
+func (ball *Bounds) Overlaps(player *Bounds) bool {
+	return ball.Min[0] < player.Max[0] && player.Min[0] < ball.Max[0] &&
+		ball.Min[1] < player.Max[1] && player.Min[1] < ball.Max[1]
 }

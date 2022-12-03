@@ -2,10 +2,10 @@ package engine
 
 import (
 	"fmt"
-	"image"
 	"image/color"
 	"math/rand"
 
+	"github.com/FLNacif/go-pong/consts"
 	"github.com/FLNacif/go-pong/math"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
@@ -31,15 +31,24 @@ var (
 	ballColor = color.RGBA{255, 255, 255, 255}
 )
 
-func (b *Ball) Bounds() image.Rectangle {
-	return image.Rectangle{}
+func (b *Ball) Bounds() *Bounds {
+	return &Bounds{
+		[2]float64{
+			b.X*float64(consts.CanvasWidth) - (ballWidth / 2),
+			b.Y*float64(consts.CanvasHeight) - (ballHeight / 2),
+		},
+		[2]float64{
+			b.X*float64(consts.CanvasWidth) + (ballWidth / 2),
+			b.Y*float64(consts.CanvasHeight) + (ballHeight / 2),
+		},
+	}
 }
 
 func (b *Ball) Draw(screen *ebiten.Image) {
 	ebitenutil.DrawRect(
 		screen,
-		b.X*float64(screen.Bounds().Max.X)-(ballWidth/2),
-		b.Y*float64(screen.Bounds().Max.Y)-(ballHeight/2),
+		b.X*float64(consts.CanvasWidth)-(ballWidth/2),
+		b.Y*float64(consts.CanvasHeight)-(ballHeight/2),
 		ballWidth,
 		ballHeight,
 		b.ballColor,
@@ -51,6 +60,10 @@ func (b *Ball) Move() {
 	if b.Y < 0 || b.Y > 1 {
 		b.direction[1] = -b.direction[1]
 	}
+}
+
+func (b *Ball) Hit() {
+	b.direction[0] = -b.direction[0]
 }
 
 func (b *Ball) Reset() {

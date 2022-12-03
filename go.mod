@@ -3,6 +3,7 @@ module github.com/flnacif/go-pong
 go 1.19
 
 require (
+	github.com/FLNacif/go-pong/consts v0.0.0-00010101000000-000000000000
 	github.com/FLNacif/go-pong/engine v0.0.0-00010101000000-000000000000
 	github.com/hajimehoshi/ebiten/v2 v2.4.13
 )
@@ -23,3 +24,5 @@ require (
 replace github.com/FLNacif/go-pong/engine => ./engine
 
 replace github.com/FLNacif/go-pong/math => ./math
+
+replace github.com/FLNacif/go-pong/consts => ./consts

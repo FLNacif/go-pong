@@ -7,12 +7,8 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 
+	"github.com/FLNacif/go-pong/consts"
 	"github.com/FLNacif/go-pong/engine"
-)
-
-const (
-	screenWidth  int = 640
-	screenHeight int = 480
 )
 
 type Game struct {
@@ -34,14 +30,14 @@ func (g *Game) Draw(screen *ebiten.Image) {
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return 320, 240
+	return consts.CanvasWidth, consts.CanvasHeight
 }
 
 func main() {
 	s := new(engine.State)
 	s.InitializeState()
 
-	ebiten.SetWindowSize(screenWidth, screenHeight)
+	ebiten.SetWindowSize(consts.ScreenWidth, consts.ScreenHeight)
 
 	if err := ebiten.RunGame(&Game{s}); err != nil {
 		log.Fatal(err)

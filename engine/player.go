@@ -2,10 +2,10 @@ package engine
 
 import (
 	"fmt"
-	"image"
 	"image/color"
 	"math/rand"
 
+	"github.com/FLNacif/go-pong/consts"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
@@ -24,7 +24,7 @@ const (
 	playerHeight  float64 = 20.0
 	player1StartX float64 = 0.05
 	player2StartX float64 = 0.95
-	playerSpeed   float64 = 0.005
+	playerSpeed   float64 = 0.01
 )
 
 var (
@@ -32,22 +32,43 @@ var (
 	playerGREEN color.RGBA = color.RGBA{0, 255, 0, 255}
 )
 
-func (p *Player) Bounds() image.Rectangle {
-	return image.Rectangle{}
+func (p *Player) Bounds() *Bounds {
+	return &Bounds{
+		[2]float64{
+			p.X*float64(consts.CanvasWidth) - (playerWidth / 2),
+			p.Y*float64(consts.CanvasHeight) - (playerHeight / 2),
+		},
+		[2]float64{
+			p.X*float64(consts.CanvasWidth) + (playerWidth / 2),
+			p.Y*float64(consts.CanvasHeight) + (playerHeight / 2),
+		},
+	}
 }
 
 func (p *Player) Move() {
 	p.Y = p.Y + float64(p.speed*p.direction[1])
-	if p.Y < 0 || p.Y > 1 {
-		p.direction[1] = -p.direction[1]
+	if p.Y > 1 {
+		p.Y = 1
+	}
+	if p.Y < 0 {
+		p.Y = 0
+	}
+}
+
+func (p *Player) ChangeDirection(direction consts.MovingDirection) {
+	if direction == consts.Up {
+		p.direction[1] = -1
+	}
+	if direction == consts.Down {
+		p.direction[1] = 1
 	}
 }
 
 func (p *Player) Draw(screen *ebiten.Image) {
 	ebitenutil.DrawRect(
 		screen,
-		p.X*float64(screen.Bounds().Max.X)-(playerWidth/2),
-		p.Y*float64(screen.Bounds().Max.Y)-(playerHeight/2),
+		p.X*float64(consts.CanvasWidth)-(playerWidth/2),
+		p.Y*float64(consts.CanvasHeight)-(playerHeight/2),
 		playerWidth,
 		playerHeight,
 		p.playerColor,
@@ -62,7 +83,7 @@ func (p *Player) Initialize(playerNumber int) {
 		direction = -1
 	}
 	p.direction = [2]float64{float64(0), float64(direction)}
-	p.speed = 0.005
+	p.speed = playerSpeed
 	if playerNumber == 1 {
 		p.X = player1StartX
 		p.playerColor = playerRED
