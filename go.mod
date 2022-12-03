@@ -8,6 +8,7 @@ require (
 )
 
 require (
+	github.com/FLNacif/go-pong/math v0.0.0-00010101000000-000000000000 // indirect
 	github.com/ebitengine/purego v0.0.0-20220905075623-aeed57cda744 // indirect
 	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20220806181222-55e207c401ad // indirect
 	github.com/hajimehoshi/file2byteslice v0.0.0-20210813153925-5340248a8f41 // indirect
@@ -16,6 +17,9 @@ require (
 	golang.org/x/image v0.1.0 // indirect
 	golang.org/x/mobile v0.0.0-20220722155234-aaac322e2105 // indirect
 	golang.org/x/sys v0.0.0-20220818161305-2296e01440c6 // indirect
+	golang.org/x/text v0.4.0 // indirect
 )
 
 replace github.com/FLNacif/go-pong/engine => ./engine
+
+replace github.com/FLNacif/go-pong/math => ./math

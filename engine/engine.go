@@ -2,8 +2,14 @@ package engine
 
 import (
 	"fmt"
+	"image/color"
+	"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/examples/resources/fonts"
+	"github.com/hajimehoshi/ebiten/v2/text"
+	"golang.org/x/image/font"
+	"golang.org/x/image/font/opentype"
 )
 
 type Entity interface {
@@ -28,7 +34,26 @@ func (s *State) Update() {
 	s.CheckGoal()
 }
 
+var (
+	titleArcadeFont font.Face
+)
+
+func init() {
+	tt, err := opentype.Parse(fonts.PressStart2P_ttf)
+	if err != nil {
+		log.Fatal(err)
+	}
+	const dpi = 72
+	titleArcadeFont, err = opentype.NewFace(tt, &opentype.FaceOptions{
+		Size:    8,
+		DPI:     dpi,
+		Hinting: font.HintingFull,
+	})
+}
+
 func (s *State) Draw(screen *ebiten.Image) {
+
+	text.Draw(screen, fmt.Sprintf("RED %d x %d GREEN", s.score[0], s.score[1]), titleArcadeFont, 10, 10, color.White)
 	for _, entitie := range s.Entities {
 		entitie.Draw(screen)
 	}
@@ -45,12 +70,12 @@ func (s *State) AddScore(playerNumber int) {
 
 func (s *State) CheckGoal() {
 	if s.Ball.X < s.Player1.X {
-		s.AddScore(1)
+		s.AddScore(2)
 		s.Ball.Reset()
 
 	}
 	if s.Ball.X > s.Player2.X {
-		s.AddScore(2)
+		s.AddScore(1)
 		s.Ball.Reset()
 
 	}

@@ -11,8 +11,8 @@ import (
 )
 
 const (
-	screenWidth  = 640
-	screenHeight = 480
+	screenWidth  int = 640
+	screenHeight int = 480
 )
 
 type Game struct {
@@ -41,7 +41,7 @@ func main() {
 	s := new(engine.State)
 	s.InitializeState()
 
-	ebiten.SetWindowSize(640, 480)
+	ebiten.SetWindowSize(screenWidth, screenHeight)
 
 	if err := ebiten.RunGame(&Game{s}); err != nil {
 		log.Fatal(err)
