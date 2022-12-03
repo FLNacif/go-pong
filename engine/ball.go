@@ -22,7 +22,7 @@ type Ball struct {
 const (
 	ballWidth  = 3.0
 	ballHeight = 3.0
-	ballSpeed  = 0.008
+	ballSpeed  = 0.006
 	ballStartX = 0.5
 	ballStartY = 0.5
 )
@@ -75,7 +75,12 @@ func (b *Ball) Initialize() {
 	b.Y = ballStartY
 	b.ballColor = ballColor
 	b.speed = ballSpeed
-	b.direction = math.Vector{rand.Float64()*10 - 5, rand.Float64()*10 - 5}
+	randX := rand.Intn(10) - 5
+	for randX == 0 {
+		randX = rand.Intn(10) - 5
+	}
+	randY := rand.Intn(10) - 5
+	b.direction = math.Vector{float64(randX), float64(randY)}
 	b.direction.Normalize()
 }
 
