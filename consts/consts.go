@@ -10,6 +10,7 @@ const (
 type MovingDirection int
 
 const (
-	Up   MovingDirection = MovingDirection(0)
+	Up   MovingDirection = MovingDirection(-1)
+	Stop MovingDirection = MovingDirection(0)
 	Down MovingDirection = MovingDirection(1)
 )

@@ -22,7 +22,7 @@ type Ball struct {
 const (
 	ballWidth  = 3.0
 	ballHeight = 3.0
-	ballSpeed  = 0.006
+	ballSpeed  = 0.01
 	ballStartX = 0.5
 	ballStartY = 0.5
 )

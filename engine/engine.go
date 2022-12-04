@@ -107,22 +107,29 @@ func (s *State) CheckHit() {
 	}
 }
 
-func (s *State) isKeyJustPressed() bool {
-	if inpututil.IsKeyJustPressed(ebiten.KeyArrowUp) {
+func (s *State) isKeyJustPressed() {
+
+	if inpututil.KeyPressDuration(ebiten.KeyArrowUp) > 0 {
 		s.Player2.ChangeDirection(consts.Up)
 	}
-	if inpututil.IsKeyJustPressed(ebiten.KeyArrowDown) {
+	if inpututil.KeyPressDuration(ebiten.KeyDown) > 0 {
 		s.Player2.ChangeDirection(consts.Down)
 	}
+	if inpututil.KeyPressDuration(ebiten.KeyArrowUp) == 0 &&
+		inpututil.KeyPressDuration(ebiten.KeyDown) == 0 {
+		s.Player2.ChangeDirection(consts.Stop)
+	}
 
-	if inpututil.IsKeyJustPressed(ebiten.KeyW) {
+	if inpututil.KeyPressDuration(ebiten.KeyW) > 0 {
 		s.Player1.ChangeDirection(consts.Up)
 	}
-
-	if inpututil.IsKeyJustPressed(ebiten.KeyS) {
+	if inpututil.KeyPressDuration(ebiten.KeyS) > 0 {
 		s.Player1.ChangeDirection(consts.Down)
 	}
-	return true
+	if inpututil.KeyPressDuration(ebiten.KeyW) == 0 &&
+		inpututil.KeyPressDuration(ebiten.KeyS) == 0 {
+		s.Player1.ChangeDirection(consts.Stop)
+	}
 }
 
 func (s *State) InitializeState() {

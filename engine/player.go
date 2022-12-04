@@ -3,7 +3,6 @@ package engine
 import (
 	"fmt"
 	"image/color"
-	"math/rand"
 
 	"github.com/FLNacif/go-pong/consts"
 	"github.com/hajimehoshi/ebiten/v2"
@@ -62,6 +61,9 @@ func (p *Player) ChangeDirection(direction consts.MovingDirection) {
 	if direction == consts.Down {
 		p.direction[1] = 1
 	}
+	if direction == consts.Stop {
+		p.direction[1] = 0
+	}
 }
 
 func (p *Player) Draw(screen *ebiten.Image) {
@@ -78,11 +80,8 @@ func (p *Player) Draw(screen *ebiten.Image) {
 func (p *Player) Initialize(playerNumber int) {
 	p.playerNumber = playerNumber
 	p.Y = 0.5
-	direction := rand.Intn(2)
-	if direction == 0 {
-		direction = -1
-	}
-	p.direction = [2]float64{float64(0), float64(direction)}
+
+	p.direction = [2]float64{float64(0), float64(0)}
 	p.speed = playerSpeed
 	if playerNumber == 1 {
 		p.X = player1StartX
