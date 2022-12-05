@@ -44,7 +44,7 @@ func (p *Player) Bounds() *Bounds {
 	}
 }
 
-func (p *Player) Move() {
+func (p *Player) Update() {
 	p.Y = p.Y + float64(p.speed*p.direction[1])
 	if p.Y > 1 {
 		p.Y = 1

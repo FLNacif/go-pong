@@ -17,7 +17,7 @@ import (
 
 type Entity interface {
 	Draw(screen *ebiten.Image)
-	Move()
+	Update()
 	Debug()
 	Bounds() *Bounds
 }
@@ -38,7 +38,7 @@ type State struct {
 func (s *State) Update() {
 	s.isKeyJustPressed()
 	for _, entitie := range s.Entities {
-		entitie.Move()
+		entitie.Update()
 	}
 	s.CheckHit()
 	s.CheckGoal()
@@ -85,12 +85,10 @@ func (s *State) CheckGoal() {
 	if ballBounds.Max[0] < player1Bounds.Min[0] {
 		s.AddScore(2)
 		s.Ball.Reset()
-
 	}
 	if ballBounds.Min[0] > player2Bounds.Max[0] {
 		s.AddScore(1)
 		s.Ball.Reset()
-
 	}
 }
 
@@ -100,10 +98,10 @@ func (s *State) CheckHit() {
 	player2Bounds := s.Player2.Bounds()
 
 	if ballBounds.Overlaps(player1Bounds) {
-		s.Ball.Hit()
+		s.Ball.Hit((*s.Player1))
 	}
 	if ballBounds.Overlaps(player2Bounds) {
-		s.Ball.Hit()
+		s.Ball.Hit((*s.Player2))
 	}
 }
 

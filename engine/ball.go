@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"image/color"
 	"math/rand"
+	"time"
 
 	"github.com/FLNacif/go-pong/consts"
 	"github.com/FLNacif/go-pong/math"
@@ -12,11 +13,12 @@ import (
 )
 
 type Ball struct {
-	X         float64
-	Y         float64
-	speed     float64
-	ballColor color.RGBA
-	direction math.Vector
+	X                  float64
+	Y                  float64
+	speed              float64
+	ballColor          color.RGBA
+	direction          math.Vector
+	lastInitialization int64
 }
 
 const (
@@ -54,7 +56,10 @@ func (b *Ball) Draw(screen *ebiten.Image) {
 		b.ballColor,
 	)
 }
-func (b *Ball) Move() {
+func (b *Ball) Update() {
+	if (time.Now().UnixMilli() - b.lastInitialization) < 2000 {
+		return
+	}
 	b.X = b.X + float64(b.speed*b.direction[0])
 	b.Y = b.Y + float64(b.speed*b.direction[1])
 	if b.Y < 0 || b.Y > 1 {
@@ -62,8 +67,15 @@ func (b *Ball) Move() {
 	}
 }
 
-func (b *Ball) Hit() {
-	b.direction[0] = -b.direction[0]
+func (b *Ball) Hit(p Player) {
+	b.direction[0] = -b.direction[0] * 10
+
+	if b.Y <= p.Y {
+		b.direction[1] = float64(-rand.Intn(10))
+	} else {
+		b.direction[1] = float64(rand.Intn(10))
+	}
+	b.direction.Normalize()
 }
 
 func (b *Ball) Reset() {
@@ -82,6 +94,8 @@ func (b *Ball) Initialize() {
 	randY := rand.Intn(10) - 5
 	b.direction = math.Vector{float64(randX), float64(randY)}
 	b.direction.Normalize()
+
+	b.lastInitialization = time.Now().UnixMilli()
 }
 
 func (b *Ball) Debug() {

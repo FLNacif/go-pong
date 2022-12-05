@@ -15,3 +15,7 @@ func (v *Vector) Normalize() *Vector {
 func (v *Vector) Length() float64 {
 	return math.Sqrt(v[0]*v[0] + v[1]*v[1])
 }
+
+func Abs(x float64) float64 {
+	return math.Abs(x)
+}
